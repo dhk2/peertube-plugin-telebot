@@ -5,14 +5,17 @@ const Downloader = require('nodejs-file-downloader');
 const { Telegraf } = require('telegraf')
 const { Keyboard } = require('telegram-keyboard');
 const { channel } = require('diagnostics_channel');
+const { Console } = require('console');
 //const tiny = require('tiny-json-http')
 botApiUrl = "https://api.telegram.org/bot5396896142:AAHoEXAWjWrMPZ-M1H4H5K2gxAH7-2cVGrc/sendMessage?chat_id=-1001745964654&text=";
-
+var announceChannel = undefined;
+var announcePlaylist = undefined;
+var announcePlaylistId = undefined;
 var adminUser = "root";
 var adminUser = "test";
-var botName = "unitialized bot name";
-var botKey = "unitialized bot key";
-var botChats = new Array();
+var botName = undefined;
+var botKey = undefined;
+var botChats = [];
 var instance = "https://p2ptube.us";
 var debug = true;
 var bot = undefined;
@@ -109,7 +112,10 @@ async function register({
     announcePlaylist = await settingsManager.getSettings("telegram-announce-playlist");
     //defaultInvidious = await settingsManager.getSettings("telegram-invidious");
   } catch { console.log("error loading settings") }
-
+  if (botName == undefined) {
+    console.log("No Bot information available, unable to initialize plugin");
+    return;
+  }
   //                               plugin initialization
   basePath = peertubeHelpers.plugin.getDataDirectoryPath();
   var base = peertubeHelpers.config.getWebserverUrl();
@@ -126,34 +132,69 @@ async function register({
     var storageBotChats = await storageManager.getData('telegram-chats');
   } catch { console.log("error loading existing telegram users") }
   if (storageBotChats != undefined) {
-    console.log("storageBotchats", storageBotChats);
+    //console.log("storageBotchats", storageBotChats);
     botChats = storageBotChats;
-    console.log("botChats", botChats);
+    // console.log("botChats", botChats);
   } else {
     console.log("no known telegram users");
+    botChats = [];
   }
-  importedVideos = await storageManager.getData('telegram-imports');
+  try {
+    importedVideos = await storageManager.getData('telegram-imports');
+  } catch { console.log("error loading imported video list") }
   if (importedVideos == undefined) {
     console.log("initializing imported videos");
     importedVideos = [];
   }
-  console.log("imported videos", importedVideos);
+  //console.log("imported videos", importedVideos);
   var bearerToken = "";
-  if (testWebServer) {
-    bearerToken = await getToken(adminUser, adminPassword, testWebServer + "/api/v1");
-  } else {
-    bearerToken = await getToken(adminUser, adminPassword, instance + "/api/v1");
-  }
+  try {
+    if (testWebServer) {
+      bearerToken = await getToken(adminUser, adminPassword, testWebServer + "/api/v1");
+    } else {
+      bearerToken = await getToken(adminUser, adminPassword, instance + "/api/v1");
+    }
+  } catch { console.log("error getting bearer token") }
   console.log("\n\n\n\n\n\n\nring bear: ", bearerToken);
-  syncChannels = await storageManager.getData('telegram-sync');
-  // console.log("\n invidious", defaultInvidious);
+  try {
+    syncChannels = await storageManager.getData('telegram-sync');
+  } catch { console.log("error loading youtube sync list") }
+  if (syncChannels == undefined) {
+    console.log("initializing sync channels");
+    syncChannels = [];
+  }
+  if (announcePlaylist) {
+    var playlists = undefined;
+    try {
+      var playlistsresult = await axios.get(instance + "/api/v1/video-playlists");
+      playlists = playlistsresult.data.data;
+    } catch (err) {
+      console.log("unable to load playlists, looking for ", announcePlaylist, err);
+    }
+    console.log(playlists);
+    if (playlists) {
+      for (i = 0; i < playlists.length; i++) {
+        console.log("announcement playlists", announcePlaylist)
+        if (playlists[i].uuid == announcePlaylist) {
+          announcePlaylistId = playlists[i].id
+        }
+      }
+    }
+  } else {
+    console.log("no playlist");
+  }
+  console.log("instance", instance);
+  console.log("telegram announce playlist ID", announcePlaylistId);
   console.log("telegram-name", botName);
-  console.log("telegram-key", botKey.length);
+  console.log("telegram-key length", botKey.length);
   console.log("telegram-admin-user", adminUser);
-  console.log("telegram-admin-password", adminPassword.length);
+  console.log("telegram-admin-password length", adminPassword.length);
   console.log("telegram-announce-channel", announceChannel);
   console.log("telegram-announce-playlist", announcePlaylist);
   console.log("telegram-invidious", defaultInvidious);
+  console.log("sync channels", syncChannels.length);
+  console.log("telegram linked accounts", botChats.length);
+  console.log("imported videos", importedVideos.length);
   //
   //                                       BOT stuff
   try {
@@ -161,10 +202,8 @@ async function register({
   } catch {
     console.log("unable to start bot, may be already running");
   }
-  bot.start((ctx) => ctx.reply('Welcome'))
+  bot.start((ctx) => ctx.reply('Welcome to Telebot for PeerTube'))
   bot.help((ctx) => ctx.reply('Communication channel with peertube instance at ' + instance))
-  bot.hears('https://www.youtube.com', (ctx) => ctx.reply('Heard youtube link' + ctx.update.message.text));
-  //bot.help((ctx) => ctx.reply('Communication channel with peertube instance at ' + instance))
   /*
   bot.url(async (ctx) => {
     sentUrl = ctx.update.message.text;
@@ -222,23 +261,26 @@ async function register({
   bot.on('sticker', (ctx) => ctx.reply('Thanks for the sticker'))
 
   bot.command('settings', async (ctx) => {
-    console.log("message from", ctx.update.message.from);
+    //console.log("message from", ctx.update.message.from);
     //console.log("message chat", ctx.update.message.chat);
     var statusUser = "";
     try {
       var user = await storageManager.getData(ctx.update.message.from.id);
     } catch {
-      console.log("error getting user from peertube db", ctx.update.message.from)
+      console.log("error getting user from peertube db for settings", ctx.update.message.from)
     }
-    console.log("user", user);
+    //console.log("user", user);
     if (user == undefined) {
       console.log("failed to determine user to find status for");
       ctx.reply("no settings for you");
       return;
     }
+    user.pending = "";
+    storageManager.storeData(ctx.update.message.from.id, user);
     statusUser = "User Name: " + user.username +
       "\nDisplay Name: " + user.displayname +
       "\nEmail: " + user.email +
+      "\nChat ID: " + ctx.update.message.from.id +
       "\nNotifications: ";
     var notes = "";
     if (!user.muteAnnouncements) {
@@ -248,12 +290,11 @@ async function register({
       notes = notes + "Livestreams ";
     }
     if (!user.muteSubscriptions) {
-      notes = notes + "Supscriptions ";
+      notes = notes + "Subscriptions ";
     }
     if (!user.muteWelcome) {
       notes = notes + "Greeting ";
     }
-    console.log(notes.length);
     if (notes == "") {
       notes = "Muted";
     }
@@ -267,11 +308,11 @@ async function register({
     } catch {
       console.log("API call failure getting channels", instance, user);
     }
-    console.log("\n\n user channels", userChannels);
-    console.log("how many channels", userChannels.data.data.length);
+    //console.log("\n\n user channels", userChannels);
+    //console.log("how many channels", userChannels.data.data.length);
     let c = userChannels.data.data;
     if (c) {
-      statusUser = statusUser + "Channels:"
+      statusUser = statusUser + "\nChannels:\n"
 
       for (let j = 0; j < c.length; j++) {
         //console.log("temp step", j, c[j].name);
@@ -280,13 +321,15 @@ async function register({
           for (let i = 0; i < syncChannels.length; i++) {
             console.log(c[j].name, syncChannels[i].handle);
             if (syncChannels[i].handle == c[j].name) {
-              statusUser = statusUser + ", synched to " + syncChannels[i].uuid;
+              statusUser = statusUser + " synched to https://youtube.com/channel/" + syncChannels[i].uuid;
             }
           }
         }
       }
     }
-    console.log(importedVideos, syncChannels);
+    console.log("imported videos:", importedVideos.length);
+    console.log("synched channels:", syncChannels.length, syncChannels);
+    console.log("telegram linked users", botChats.length, botChats);
     return ctx.reply(statusUser);
   })
 
@@ -463,6 +506,12 @@ async function register({
         ctx.reply("failed to find youtube channel information, supported formats:\nUC-lHJZR3Gqxm24_Vd_AJ5Yw\nhttps://www.youtube.com/channel/UC-lHJZR3Gqxm24_Vd_AJ5Yw\nhttps://www.youtube.com/c/crashcourse");
         return;
       }
+      for (let i = 0; i < syncChannels.length; i++) {
+        if (syncChannels[i].uuid == youtubeId) {
+          ctx.reply("Channel already copied by " + syncChannels[i].handle);
+          return;
+        }
+      }
       var userChannels = await axios.get(`${instance}/api/v1/accounts/${user.username}/video-channels`);
       console.log("how many channels", userChannels.data.data.length);
       let c = userChannels.data.data;
@@ -564,8 +613,8 @@ async function register({
       console.log("video updated announcement", updateMessage);
       for (chat of botChats) {
         var tempUser = await storageManager.getData(chat);
-        //console.log("mute check", chat, tempUser);
-        console.log("updated mute check", chat, tempUser.username, tempUser.muteAnnouncements)
+        console.log("announcement mute check for updated video", chat, tempUser);
+        //console.log("updated mute check", chat, tempUser.username, tempUser.muteAnnouncements)
         if (!tempUser.muteAnnouncements) {
           sendTelegram(chat, updateMessage);
         }
@@ -588,13 +637,23 @@ async function register({
   })
   registerHook({
     target: 'action:api.video-playlist-element.created',
-    handler: async ({ video, videoPlaylist, playlist, playlistElement }) => {
-      console.log("hacking on playlists", video);
-      console.log("video play list element", videoPlaylist);
-      console.log("playlist", playlist);
+    handler: async ({ playlistElement }) => {
+
       console.log("play list element", playlistElement);
+      if (announcePlaylistId != playlistElement.datavalues.videoPlaylistId) {
+        console.log("not a monitored playlist");
+        //return;
+      }
+      videoApiUrl = instance + "/api/v1/videos/" + playlistElement.dataValues.videoId;
+      playlistId = playlistElement.datavalues.videoPlaylistId;
+      console.log("video api url", videoApiUrl);
+      console.log("PlayList ID", playlistId);
+      var videoJson = await axios.get(videoApiUrl);
+      console.log("video json", videoJson);
+      var videoWatchUrl = videoJson.data.url;
+      var author = videJson.data.channel.displayName;
       //var updateMessage = await videoAnnounce(video.dataValues);
-      var updateMessage = "working on it hoss";
+      var updateMessage = "new video by " + author + "\n" + videoWatchUrl;
       for (chat of botChats) {
         sendTelegram(chat, updateMessage);
       }
@@ -634,11 +693,16 @@ async function register({
       await storageManager.storeData("telegram-chats", botChats);
       console.log("added chat id " + chatID + " to existing telegram users")
     }
+    try {
     user = await storageManager.getData(chatID)
     console.log("user data loaded", user);
+    } catch (err){
+      console.log("error loading user data",err);
+    }
     var userChannels = "";
-    if (user != undefined) {
+    if (user) {
       //upgrade hacks
+      console.log("existing user detected");
       if (user.muteAnnouncements == undefined) { user.muteAnnouncements = false }
       if (user.muteLives == undefined) { user.muteLives = false }
       if (user.muteSubscriptions == undefined) { user.muteSubscriptions = false }
@@ -736,7 +800,7 @@ async function register({
         videoApiData = await axios.get(videoDataUrl);
         //console.log("the video api data supposably", videoApiData);
         var latestVideos = videoApiData.data.latestVideos;
-        console.log("latest video got ", importedVideos);
+        //console.log("latest video got ", importedVideos);
         console.log("how many latest videos", latestVideos.length);
         var limit = 5;//TODO, make configurable, 60 is a bit much for testing.
         for (let j = 0; j < limit; j++) {
@@ -745,10 +809,11 @@ async function register({
           if (importedVideos) {
             console.log("imported video length:", importedVideos.length);
             for (k = 0; k < importedVideos.length; k++) {
-              console.log("duplicate checking", importedVideos[k].yuid, latestVideos[j].videoId);
+              //console.log("duplicate checking", importedVideos[k].yuid, latestVideos[j].videoId);
               if (importedVideos[k].yuid == latestVideos[j].videoId) {
                 duped = true;
                 k = importedVideos.length;
+                console.log("already imported", latestVideos[j].title)
                 continue;
               }
             }
@@ -761,7 +826,7 @@ async function register({
           //console.log("channel data url", channelDataUrl);
           channelData = await axios.get(channelDataUrl);
           //console.log(channelData);
-          console.log("channel data data", channelData.data);
+          //console.log("channel data data", channelData.data);
           var importResult = await importVideo(channelData.data.id, defaultInvidious + "/watch?v=" + latestVideos[j].videoId, bearerToken);
           console.log("import result", importResult.data.video.uuid);
           newImport = {};
@@ -809,6 +874,7 @@ async function sendTelegram(id, message) {
 async function videoAnnounce(videoData, firstLine) {
   console.log("video announcing videoData", videoData);
   var videoDataUrl = instance + "/api/v1/videos/" + videoData.uuid
+  console.log(videoDataUrl);
   var videoApiData = await axios.get(videoDataUrl);
   console.log("\n\n\n\n\nVideo announcing api data ", videoApiData.data);
   var videoUrl = instance + "/videos/watch/" + videoData.uuid;
@@ -1032,9 +1098,12 @@ async function importVideo(channelId, videoUrl, bearerToken) {
   let ptApi = instance + "/api/v1/videos/imports";
   console.log("post data", postData);
   console.log("headers", headers);
-  console.log("ptApi",ptApi);
-  let importResult = await axios.post(ptApi, postData, { headers });
-  //console.log("subroutine import result", importResult);
+  console.log("ptApi", ptApi);
+  var importResult = undefined;
+  try {
+    importResult = await axios.post(ptApi, postData, { headers });
+  } catch (err) { console.log("error attempting to import video @", videoUrl, err) }
+  console.log("subroutine import result", importResult);
   return importResult;
 }
 async function getPeertubeVideoInfo(videoUUID, videoHost) {
