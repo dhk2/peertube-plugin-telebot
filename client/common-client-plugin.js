@@ -64,11 +64,19 @@ function register({ registerHook, peertubeHelpers }) {
         console.log(instance, instanceUrl);
         const panel = document.createElement('div');
         panel.setAttribute('class', 'custom-links');
-
+        const script = document.createElement('script');
+        script.setAttribute(
+          'src',
+          'https://telegram.org/js/telegram-widget.js?19'
+        );
+        script.setAttribute('data-telegram-login','p2pptbot');
+        script.setAttribute('data-size','large');
+        script.setAttribute('data-auth-url','https://p2ptube.us/plugins/telebot/router/callback');
+        script.setAttribute('data-request-access','write');
+        script.setAttribute('async', '');
         //const html = `<script src="https://telegram.org/js/telegram-widget.js?19" data-telegram-login="p2pptbot" data-size="large" data-auth-url="https://p2ptube.us/plugins/telebot/router/callback" data-request-access="write"></script>`
         //const html = "<script async src=\"https://telegram.org/js/telegram-widget.js?19\" data-telegram-login=\"" + robotName + "\" data-size=\"large\" data-auth-url=\"" + redirectURL + "\" data-request-access=\"write\"></script>";
-        //const html = c + "<h1>what the actual fuck";
-        const html = `<button><a href="/plugins/telebot/router/telegram">Login With Telegram</a></button>`;
+        const html = `<div><iframe id="telegram-login-p2pptbot" src="https://oauth.telegram.org/embed/p2pptbot?origin=https%3A%2F%2Fcozy.tv&amp;size=large&amp;userpic=true&amp;request_access=write&amp;lang=en" width="238" height="40" frameborder="0" scrolling="no" style="overflow: hidden; border: none; height: 40px; width: 217px;"></iframe><script src="https://telegram.org/js/telegram-widget.js?9" data-telegram-login="p2pbot" data-size="large" data-request-access="write" data-userpic="true" data-lang="en" data-onauth="TelegramLoginWidget.dataOnauth(user)" async=""></script></div>`;
         panel.innerHTML = html;
         console.log("panel", panel);
         console.log("html", html);
@@ -80,6 +88,7 @@ function register({ registerHook, peertubeHelpers }) {
             if (topMenu) {
               console.log("eat me", panel)
               topMenu.appendChild(panel);
+              document.head.appendChild(script);
               console.log("i've been eaten!", topMenu);
             }
           }
@@ -89,6 +98,7 @@ function register({ registerHook, peertubeHelpers }) {
             if (mainContent) {
               panel.classList.add('section')
               mainContent.appendChild(panel)
+              document.head.appendChild(script);
               console.log("Panels ", panel);
             }
           }
