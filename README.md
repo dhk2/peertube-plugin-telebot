@@ -1,3 +1,7 @@
-# PeerTube plugin Quickstart
+# Telebot
 
-See https://docs.joinpeertube.org/#/contribute-plugins?id=write-a-plugintheme
+a telegram bot plugin for authentication and notification.
+
+alpha test software, run at your own risk
+
+
