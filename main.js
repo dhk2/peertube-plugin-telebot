@@ -142,7 +142,6 @@ async function register({
     console.log("initializing imported videos");
     importedVideos = [];
   }
-  //console.log("imported videos", importedVideos);
   var bearerToken = "";
   try {
     if (testWebServer) {
@@ -249,14 +248,11 @@ async function register({
     } catch {
       console.log("API call failure getting channels", instance, user);
     }
-    //console.log("\n\n user channels", userChannels);
-    //console.log("how many channels", userChannels.data.data.length);
     let c = userChannels.data.data;
     if (c) {
       statusUser = statusUser + "\nChannels:\n"
 
       for (let j = 0; j < c.length; j++) {
-        //console.log("temp step", j, c[j].name);
         statusUser = statusUser + "\n (" + c[j].name + ") " + c[j].displayName;
         if (syncChannels) {
           for (let i = 0; i < syncChannels.length; i++) {
@@ -542,7 +538,6 @@ async function register({
       for (chat of botChats) {
         var tempUser = await storageManager.getData(chat);
         console.log("announcement mute check for updated video", chat, tempUser);
-        //console.log("updated mute check", chat, tempUser.username, tempUser.muteAnnouncements)
         if (!tempUser.muteAnnouncements) {
           sendTelegram(chat, updateMessage);
         }
@@ -581,7 +576,6 @@ async function register({
       console.log("video json", videoJson);
       var videoWatchUrl = videoJson.data.url;
       var author = videoJson.data.channel.displayName;
-      //var updateMessage = await videoAnnounce(video.dataValues);
       var updateMessage = "new video by " + author + "\n" + videoWatchUrl;
       for (chat of botChats) {
         sendTelegram(chat, updateMessage);
@@ -610,7 +604,6 @@ async function register({
     console.log(req.query.id, req.query.first_name, req.query.last_name, req.query.username);
     var chatID = req.query.id;
     console.log("\n\nchatID", chatID);
-    //console.log("req", req, "\nres", res);
     var user = {};
     if (!botChats.includes(chatID)) {
       botChats.push(chatID);
@@ -686,8 +679,6 @@ async function register({
       if (user.avatar != undefined) {
         console.log("attempting to download avatar", user.avatar);
         avatar = await axios.get(user.avatar);
-        //const basePath = peertubeHelpers.plugin.getDataDirectoryPath()
-        //writeResult = await fs.writeFile(path.join(basePath, 'avatar'), 'content of my file', function (err) {
       }
       sendTelegram(chatID, "welcome to peertube " + user.displayname);
     }
@@ -703,7 +694,6 @@ async function register({
   });
   router.use('/telegram', async (req, res) => {
     var redirectURL = instance + '/plugins/telebot/router/callback';
-    //      var botName =  await settingsManager.getSetting("telegram-name");
     var telegramWidget = "<html><body><script async src=\"https://telegram.org/js/telegram-widget.js?19\" data-telegram-login=\"" + botName + "\" data-size=\"large\" data-auth-url=\"" + redirectURL + "\" data-request-access=\"write\"></script></body></html>"
     console.log("\n\n\n widget script", telegramWidget);
     console.log("redirect", redirectURL);
@@ -798,7 +788,6 @@ async function videoAnnounce(videoData, firstLine) {
   console.log("\n\n\n\n\nVideo announcing api data ", videoApiData.data);
   var videoUrl = instance + "/videos/watch/" + videoData.uuid;
   var response = ""
-  //var videoUrl = video.dataValues.url
   if (firstLine) {
     response = firstLine
   } else if (videoApiData.data.isLive) {
@@ -806,20 +795,12 @@ async function videoAnnounce(videoData, firstLine) {
   } else {
     response = "💯 " + videoApiData.data.channel.displayName + " uploaded a new video";
   }
-  //response = response + "\n" + videoData.name;
   response = response + "\n" + videoUrl;
 
-  if (debug) {
-    //response = response + "\n isLive: " + videoData.isLive;
-    //response = response + "\n privacy" + videoApiData.data.privacy.label;
-    //response = response + "\n status" + videoApiData.data.state.label;
-
-  }
   console.log("video announce response", response);
   return response;
 }
 async function getToken(ptuser, ptpassword, ptApi) {
-  //console.log("get token", ptuser, ptpassword);
   var clientTokenPath = ptApi + "/oauth-clients/local";
   var userTokenPath = ptApi + "/users/token";
   var username = ptuser;
@@ -846,33 +827,7 @@ async function getToken(ptuser, ptpassword, ptApi) {
     return (-1);
   }
 }
-async function updateAccountAvatar(avatarUrl, ptcuid, ptApi, bearerToken) {
-  /*let url = ptApi + "/users/me/avatar/pick";
-  if (undefined == avatarUrl) {
-    var avatarURL = "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Sepia.svg/180px-Sepia.svg.png"
-  } else { var avatarURL = avatarUrl.url }
-  let downloadresult = await downloadImage(avatarURL, tempDir + 'aavatar.jpg');
-  console.log("download result", downloadresult);
-  let cavatarResult = await tiny.post({
-    url: url,
-    headers: {
-      'Content-Type': 'multipart/form-data',
-      'Authorization': 'Bearer ' + bearerToken
-    },
-    data: { avatarfile: fs.createReadStream(tempDir + 'aavatar.jpg') }
-  },
-    await function _post(err, form) {
-      if (err) {
-        console.log("account avatar error", err);
-        return false;
-      }
-      else {
-        console.log("account avatar updated for " + ptcuid);
-        return true;
-      }
-    });
-    */
-}
+
 async function updateChannelBanner(channelHandle, bannerUrl, bearerToken) {
   let apiUrl = instance + "/api/v1/video-channels/" + channelHandle + "/banner/pick";
   var fileName = channelHandle + "-banner.jpg";
