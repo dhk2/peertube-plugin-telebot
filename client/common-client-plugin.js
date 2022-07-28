@@ -5,8 +5,6 @@ function register({ registerHook, peertubeHelpers }) {
   var instance = undefined;
   elem.className = 'hello-world-h4'
   elem.innerHTML = "<script async src=\"https://telegram.org/js/telegram-widget.js?19\" data-telegram-login=\"" + robotName + "\" data-size=\"large\" data-auth-url=\"" + redirectURL + "\" data-request-access=\"write\"></script>"
-
-
   registerHook({
     target: 'action:auth-user.information-loaded',
     handler: async ({ user }) => {
@@ -48,11 +46,9 @@ function register({ registerHook, peertubeHelpers }) {
     }
   })
 
-
   registerHook({
     target: 'action:router.navigation-end',
     handler: async ({ path }) => {
-      //document.getElementById('plugin-placeholder-player-next').appendChild(elem);
       if (!(await peertubeHelpers.isLoggedIn())) {
         console.log("\n\n\npath", path);
         var pluginSettings = await peertubeHelpers.getSettings();
@@ -61,73 +57,40 @@ function register({ registerHook, peertubeHelpers }) {
         instance = serverSettings.instance.name;
         if (instance == "PeerTube") { instance = "p2ptube.us" }
         var instanceUrl = "https://" + instance;
-        console.log(instance, instanceUrl);
+        console.log("peertube site",instance, instanceUrl);
         const panel = document.createElement('div');
-        panel.setAttribute('class', 'custom-links');
-        const script = document.createElement('script');
-        script.setAttribute(
-          'src',
-          'https://telegram.org/js/telegram-widget.js?19'
-        );
-        script.setAttribute('data-telegram-login','p2pptbot');
-        script.setAttribute('data-size','large');
-        script.setAttribute('data-auth-url','https://p2ptube.us/plugins/telebot/router/callback');
-        script.setAttribute('data-request-access','write');
-        script.setAttribute('async', '');
-        //const html = `<script src="https://telegram.org/js/telegram-widget.js?19" data-telegram-login="p2pptbot" data-size="large" data-auth-url="https://p2ptube.us/plugins/telebot/router/callback" data-request-access="write"></script>`
-        //const html = "<script async src=\"https://telegram.org/js/telegram-widget.js?19\" data-telegram-login=\"" + robotName + "\" data-size=\"large\" data-auth-url=\"" + redirectURL + "\" data-request-access=\"write\"></script>";
-        const html = `<div><iframe id="telegram-login-p2pptbot" src="https://oauth.telegram.org/embed/p2pptbot?origin=https%3A%2F%2Fcozy.tv&amp;size=large&amp;userpic=true&amp;request_access=write&amp;lang=en" width="238" height="40" frameborder="0" scrolling="no" style="overflow: hidden; border: none; height: 40px; width: 217px;"></iframe><script src="https://telegram.org/js/telegram-widget.js?9" data-telegram-login="p2pbot" data-size="large" data-request-access="write" data-userpic="true" data-lang="en" data-onauth="TelegramLoginWidget.dataOnauth(user)" async=""></script></div>`;
+        panel.setAttribute('class', 'telebot-button');
+        const html = `<div _ngcontent-cav-c133="" class="login-buttons-block ng-star-inserted">
+        <a _ngcontent-cav-c133="" routerlink="/plugins/telebot/router/telegram" class="peertube-button-link orange-button ng-star-inserted" href="/plugins/telebot/router/telegram" data-alli-title-id="24507269" title="Login with Telegram">Login with Telegram</a>
+        </div>`;
         panel.innerHTML = html;
-        console.log("panel", panel);
-        console.log("html", html);
 
         setInterval(async function () {
-          if ((document.querySelector('.top-menu .custom-links') === null) && (!(await peertubeHelpers.isLoggedIn()))) {
+          if ((document.querySelector('.top-menu .telebot-button') === null) && (!(await peertubeHelpers.isLoggedIn()))) {
             const topMenu = document.querySelector('.top-menu');
             console.log("topmenu", topMenu);
             if (topMenu) {
-              console.log("eat me", panel)
+              console.log("insterting panel into topmenu", panel)
               topMenu.appendChild(panel);
-              document.head.appendChild(script);
-              console.log("i've been eaten!", topMenu);
             }
           }
-          if ((document.querySelector('.menu-wrapper .custom-links') === null) && (!(await peertubeHelpers.isLoggedIn()))) {
+          if ((document.querySelector('.menu-wrapper .telebot-button') === null) && (!(await peertubeHelpers.isLoggedIn()))) {
             const mainContent = document.querySelector('.menu-wrapper');
             console.log("maincontent", mainContent)
             if (mainContent) {
               panel.classList.add('section')
               mainContent.appendChild(panel)
-              document.head.appendChild(script);
-              console.log("Panels ", panel);
+              console.log("Panel added to main content", panel);
             }
           }
         }, 1)
       } else {
         console.log("logged in");
         //TODO need to remove login prompt from menu when already logged in without needing refresh
-        /*
-        const panel = document.getElementsByClassName("customer-links");
-        if (document.querySelector('.top-menu .custom-links') != null) {
-          const topMenu = document.querySelector('.top-menu');
-          console.log("topmenu", topMenu);
-          if (topMenu) {
-            topMenu.removeChild(panel);
-          }
-        }
-        if (document.querySelector('.menu-wrapper .custom-links') != null) {
-          const mainContent = document.querySelector('.menu-wrapper');
-          console.log("maincontent", mainContent)
-          if (mainContent) {
-            mainContent.removeChild(panel)
-          }
-        }
-        */
       }
     }
   })
 }
-
 
 export {
   register
