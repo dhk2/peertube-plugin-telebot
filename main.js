@@ -166,7 +166,7 @@ async function register({
     } catch (err) {
       console.log("unable to load playlists, looking for ", announcePlaylist, err);
     }
-    console.log(playlists);
+    console.log("playlists:", playlists);
     if (playlists) {
       for (i = 0; i < playlists.length; i++) {
         console.log("announcement playlists", announcePlaylist)
@@ -197,7 +197,7 @@ async function register({
   } catch {
     console.log("unable to start bot, may be already running");
   }
-  bot.start((ctx) => ctx.reply('Welcome to Telebot for PeerTube'))
+  bot.start((ctx) => ctx.reply('PeerTube Bot for ' + instance))
   bot.help((ctx) => ctx.reply('Communication channel with peertube instance at ' + instance))
 
   //TODO set sticker as avatar
@@ -245,24 +245,24 @@ async function register({
     console.log("getting video channels", `${instance}/api/v1/accounts/${user.username}/video-channels`);
     try {
       var userChannels = await axios.get(`${instance}/api/v1/accounts/${user.username}/video-channels`);
-    } catch {
-      console.log("API call failure getting channels", instance, user);
-    }
-    let c = userChannels.data.data;
-    if (c) {
-      statusUser = statusUser + "\nChannels:\n"
+      let c = userChannels.data.data;
+      if (c) {
+        statusUser = statusUser + "\nChannels:\n"
 
-      for (let j = 0; j < c.length; j++) {
-        statusUser = statusUser + "\n (" + c[j].name + ") " + c[j].displayName;
-        if (syncChannels) {
-          for (let i = 0; i < syncChannels.length; i++) {
-            console.log(c[j].name, syncChannels[i].handle);
-            if (syncChannels[i].handle == c[j].name) {
-              statusUser = statusUser + " synched to https://youtube.com/channel/" + syncChannels[i].uuid;
+        for (let j = 0; j < c.length; j++) {
+          statusUser = statusUser + "\n (" + c[j].name + ") " + c[j].displayName;
+          if (syncChannels) {
+            for (let i = 0; i < syncChannels.length; i++) {
+              console.log(c[j].name, syncChannels[i].handle);
+              if (syncChannels[i].handle == c[j].name) {
+                statusUser = statusUser + " synched to https://youtube.com/channel/" + syncChannels[i].uuid;
+              }
             }
           }
         }
       }
+    } catch {
+      console.log("API call failure getting channels", instance, user);
     }
     console.log("imported videos:", importedVideos.length);
     console.log("synched channels:", syncChannels.length, syncChannels);
@@ -389,21 +389,23 @@ async function register({
       await storageManager.storeData(chatID, user);
       ctx.reply('user name changed to ' + user.username);
     } else if (user.pending == "banner") {
-      user.pending = "";
+      /*user.pending = "";
       await storageManager.storeData(chatID, user);
       var newBanner = ctx.update.message.text;
       console.log("\n\n\n new banner url", newBanner);
       var userChannels = await axios.get(`${instance}/api/v1/accounts/${user.username}/video-channels`);
       console.log("userChannels for updating banner", userChannels);
       await updateChannelBanner(userChannels.data.data[0].name, newBanner, bearerToken);
+    */
     } else if (user.pending == "channelavatar") {
-      user.pending = "";
+      /*user.pending = "";
       await storageManager.storeData(chatID, user);
       var newAvatar = ctx.update.message.text;
       console.log("\n\n\n new avatar url", newAvatar);
       var userChannels = await axios.get(`${instance}/api/v1/accounts/${user.username}/video-channels`);
       console.log("userChannels for updating avatar", userChannels);
       await updateChannelAvatar(userChannels.data.data[0].name, newAvatar, bearerToken);
+      */
     } else if (user.pending == "sync") {
       user.pending = "";
       var youtubeId = undefined;
@@ -418,10 +420,14 @@ async function register({
       }
       if (rawChannel.indexOf('/c/') > 0) {
         var channelSearch = defaultInvidious + "/api/v1/search?type=channel&q=" + rawChannel.substring(rawChannel.lastIndexOf("/") + 1);
-        var searchResult = await axios.get(channelSearch);
-        var channels = searchResult.data;
-        if (channels) {
-          youtubeId = channels[0].authorId;
+        try {
+          var searchResult = await axios.get(channelSearch);
+          var channels = searchResult.data;
+          if (channels) {
+            youtubeId = channels[0].authorId;
+          }
+        } catch (err) {
+          console.log("error searching for channel id on invidious", defaultInvidious, rasChannel, err);
         }
 
       }
@@ -436,8 +442,16 @@ async function register({
           return;
         }
       }
-      var userChannels = await axios.get(`${instance}/api/v1/accounts/${user.username}/video-channels`);
-      console.log("how many channels", userChannels.data.data.length);
+      var userChannels = undefined;
+      try {
+        var userChannels = await axios.get(`${instance}/api/v1/accounts/${user.username}/video-channels`);
+        console.log("how many channels", userChannels.data.data.length);
+      } catch (err) {
+        console.log("error getting channels for user", user, err);
+        ctx.reply("problem reading channels for user");
+        return;
+      }
+
       let c = userChannels.data.data;
       for (let i = 0; i < c.length; i++) {
         console.log("\n\n menu build", i, c[i]);
@@ -572,14 +586,17 @@ async function register({
       var playlistId = playlistElement.dataValues.videoPlaylistId;
       console.log("video api url", videoApiUrl);
       console.log("PlayList ID", playlistId);
-      var videoJson = await axios.get(videoApiUrl);
-      console.log("video json", videoJson);
-      var videoWatchUrl = videoJson.data.url;
-      var author = videoJson.data.channel.displayName;
-      var updateMessage = "new video by " + author + "\n" + videoWatchUrl;
-      for (chat of botChats) {
-        sendTelegram(chat, updateMessage);
-      }
+      var videoJson = undefined;
+      try {
+        videoJson = await axios.get(videoApiUrl);
+        console.log("new playlist entry video json", videoJson);
+        var videoWatchUrl = videoJson.data.url;
+        var author = videoJson.data.channel.displayName;
+        var updateMessage = "new video by " + author + "\n" + videoWatchUrl;
+        for (chat of botChats) {
+          sendTelegram(chat, updateMessage);
+        }
+      } catch (err) { console.log("failure loading video json for playlist entry", videoApiUrl, err) }
     }
   })
   const result = registerExternalAuth({
@@ -645,12 +662,13 @@ async function register({
       }
       console.log("getting user channels for ", user.username);
       console.log(`/api/v1/accounts/${user.username}/video-channels`)
-      userChannels = await axios.get(`${instance}/api/v1/accounts/${user.username}/video-channels`);
-      console.log("User channels loaded during authentication ", userChannels);
-      for (const channel of userChannels.data.data) {
-        console.log("channel name:", channel.name, "\ndisplay name", channel.displayName, channel.sync);
-      }
-
+      try {
+        userChannels = await axios.get(`${instance}/api/v1/accounts/${user.username}/video-channels`);
+        console.log("User channels loaded during authentication ", userChannels);
+        for (const channel of userChannels.data.data) {
+          console.log("channel name:", channel.name, "\ndisplay name", channel.displayName, channel.sync);
+        }
+      } catch (err) { console.log("failed load user channels", user, err) }
     } else {
       user = {};
       console.log("Building new user", req.query);
@@ -660,7 +678,7 @@ async function register({
         displayname = req.query.first_name + "." + req.query.last_name;
         console.log("fixed username", displayname);
       }
-      if (displayname == undefined) {
+      if (displayname == ".") {
         displayname = req.query.id;
       }
       console.log("displayname: ", displayname);
@@ -676,11 +694,9 @@ async function register({
       user.muteWelcome = await settingsManager.getSetting("telegram-default-welcome");
       console.log("saving new user", user);
       await storageManager.storeData(user.id, user);
-      if (user.avatar != undefined) {
-        console.log("attempting to download avatar", user.avatar);
-        avatar = await axios.get(user.avatar);
-      }
-      sendTelegram(chatID, "welcome to peertube " + user.displayname);
+      // if (user.avatar != undefined) {
+      // console.log("attempting to download avatar", user.avatar);
+      // avatar = await axios.get(user.avatar);
     }
     console.log("pre-authentication user returned", user, user.id, user.username, user.email, user.role);
     return result.userAuthenticated({
@@ -747,7 +763,7 @@ async function register({
           await storageManager.storeData('telegram-imports', importedVideos);
         }
       } catch (err) {
-        console.log('\n\n\n\n\n\nerror getting new videos for ',err);
+        console.log('\n\n\n\n\n\nerror getting new videos for ', err);
 
       }
     }
@@ -784,8 +800,13 @@ async function videoAnnounce(videoData, firstLine) {
   console.log("video announcing videoData", videoData);
   var videoDataUrl = instance + "/api/v1/videos/" + videoData.uuid
   console.log(videoDataUrl);
-  var videoApiData = await axios.get(videoDataUrl);
-  console.log("\n\n\n\n\nVideo announcing api data ", videoApiData.data);
+  try {
+    var videoApiData = await axios.get(videoDataUrl);
+  } catch (err) {
+    console.log("error getting video data from invidious", videoDataUrl, err);
+    return;
+  }
+  console.log("Video announcing api data ", videoApiData.data);
   var videoUrl = instance + "/videos/watch/" + videoData.uuid;
   var response = ""
   if (firstLine) {
@@ -980,47 +1001,16 @@ async function importVideo(channelId, videoUrl, bearerToken) {
   console.log("subroutine import result", importResult);
   return importResult;
 }
-async function getPeertubeVideoInfo(videoUUID, videoHost) {
-  console.log("getting peertubveVideoInfo", videoUUID, videoHost);
-  if (!videoHost) {
-    videoHost = instance;
-  }
-  var videoJSON = {};
-  videoJSON.code = -1;
-  if (videoUUID == undefined || videoHost == undefined) {
-    console.log("both variables need to be defined", videoHost, videoUUID);
-    return videoJSON;
-  }
-  if (videoHost.indexOf(":") < 1) {
-    videoHost = "https://" + videoHost;
-  }
-  var url = videoHost + "/api/v1/videos/" + videoUUID;
-  //console.log(url);
-  try {
-    var JSON = await axios.get(url);
-    if (JSON != undefined) {
-      videoJSON = JSON;
-      videoJSON.code = JSON.data.state.id;
-    } else {
-      //console.log("undefined state");
-    }
-  } catch (error) {
-    //console.log("error in getting peertube video info", url);
-    if (error) {
-      if (error.response) {
-        if (error.response.status) {
-          //console.log(error.response.status);
-          videoJSON.code = error.response.status;
-          return videoJSON.code;
-        }
-      }
-    }
-  }
-  return videoJSON;
-}
+
 async function cloneChannel(channelHandle, youtubeUuid, bearerToken) {
   var invidiousDataUrl = defaultInvidious + "/api/v1/channels/" + youtubeUuid;
-  var channelResult = await axios.get(invidiousDataUrl);
+  try {
+    var channelResult = await axios.get(invidiousDataUrl);
+  } catch (err) {
+    console.log("error loading channel info from invidious", invidiousDataUrl, err);
+    ctx.reply("error getting channel data from invidious");
+    return;
+  }
   var channelJson = channelResult.data
   //console.log("channel jason", channelJson);
   var apiDataUrl = instance + "/api/v1/";
