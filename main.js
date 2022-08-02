@@ -6,6 +6,7 @@ const { Telegraf } = require('telegraf')
 const { Keyboard } = require('telegram-keyboard');
 const { channel } = require('diagnostics_channel');
 const { Console } = require('console');
+//const { JobQueue } = require('/var/www/peertube/peertube-latest/dist/server/lib/job-queue/job-queue.js');
 var botApiUrl = undefined;
 var announceChannel = undefined;
 var announcePlaylist = undefined;
@@ -197,7 +198,9 @@ async function register({
   } catch {
     console.log("unable to start bot, may be already running");
   }
-  bot.start((ctx) => ctx.reply('PeerTube Bot for ' + instance))
+  bot.start((ctx) => {
+    ctx.reply('PeerTube Bot for ' + instance)
+  });
   bot.help((ctx) => ctx.reply('Communication channel with peertube instance at ' + instance))
 
   //TODO set sticker as avatar
@@ -319,7 +322,18 @@ async function register({
     await storageManager.storeData('telegram-sync', syncChannels);
     ctx.reply("sync links cleared");
   })
-
+  bot.command('test', async (ctx) => {
+    let photoUrl = "https://tv.mattchristiansenmedia.com/static/thumbnails/feeaa2c3-f1cb-4437-8be8-df7ab2600e6f.jpg";
+    console.log("photo url", photoUrl);
+    await ctx.replyWithPhoto({ url: photoUrl }, {
+      caption: '<a href="https://tv.mattchristiansenmedia.com/videos/watch/8fdd7676-c7aa-44e4-83ce-75210c913bf8">Remember the Supreme Court Leak? | We Still Don’t Have Answers, Just New Leaks</a>',
+      parse_mode: 'HTML'
+      //reply_markup: pizzaMenu,
+    });
+  })
+  bot.command('test2', async (ctx) => {
+    await ctx.reply("[​​​​​​​​​​​](https://upload.wikimedia.org/wikipedia/commons/thumb/0/02/Stack_Overflow_logo.svg/200px-Stack_Overflow_logo.svg.png) Some text here.", { parse_mode: 'Markdown' });
+  })
   bot.command('mute', async (ctx) => {
     var chatID = ctx.update.message.from.id;
     var user = await storageManager.getData(chatID);
@@ -372,7 +386,6 @@ async function register({
     console.log("\n\nnew incoming message:" + ctx.update.message.text);
     var chatID = ctx.update.message.from.id;
     var user = await storageManager.getData(chatID);
-    console.log("user pending", user.pending);
     if (!user) { return }
     if (user.pending == 'name') {
       user.pending = "";
@@ -469,6 +482,7 @@ async function register({
       user.pending = "";
       console.log(user.pending2);
       console.log(youtubeId);
+
     } else {
       ctx.reply('work in progress, useful commands forthcoming');
       console.log("Message:\n", ctx.update.message.text);
@@ -554,6 +568,7 @@ async function register({
         console.log("announcement mute check for updated video", chat, tempUser);
         if (!tempUser.muteAnnouncements) {
           sendTelegram(chat, updateMessage);
+
         }
       }
     }
