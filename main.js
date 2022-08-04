@@ -198,8 +198,20 @@ async function register({
   } catch {
     console.log("unable to start bot, may be already running");
   }
-  bot.start((ctx) => {
+  bot.start(async (ctx) => {
     ctx.reply('PeerTube Bot for ' + instance)
+    ctx.reply("Click here to logon " + instance + "/plugins/telebot/router/telegram");
+    var user = undefined;
+    try {
+      user = await storageManager.getData(ctx.update.message.from.id);
+    } catch {
+      console.log("error getting user from peertube db for settings", ctx.update.message.from)
+    }
+    if (user == undefined) {
+      console.log("user not found, give link to logon");
+      ctx.reply("Click here to logon " + instance + "/plugins/telebot/router/telegram");
+      return;
+    }
   });
   bot.help((ctx) => ctx.reply('Communication channel with peertube instance at ' + instance))
 
@@ -208,8 +220,9 @@ async function register({
 
   bot.command('settings', async (ctx) => {
     var statusUser = "";
+    var user = undefined;
     try {
-      var user = await storageManager.getData(ctx.update.message.from.id);
+      user = await storageManager.getData(ctx.update.message.from.id);
     } catch {
       console.log("error getting user from peertube db for settings", ctx.update.message.from)
     }
@@ -514,7 +527,7 @@ async function register({
       await storageManager.storeData("telegram-sync", syncChannels);
       await cloneChannel(syncChannel.handle, syncChannel.uuid, bearerToken);
       ctx.deleteMessage();
-      ctx.reply("Synchronization configured");
+      ctx.reply(instance + "/c/" + channelName);
       return // ctx.answerCbQuery(ctx.callbackQuery.data);
     }
     if (callbackText == "Which notifictions to mute") {
@@ -563,12 +576,13 @@ async function register({
     handler: async ({ video }) => {
       var updateMessage = await videoAnnounce(video.dataValues);
       console.log("video updated announcement", updateMessage);
-      for (chat of botChats) {
-        var tempUser = await storageManager.getData(chat);
-        console.log("announcement mute check for updated video", chat, tempUser);
-        if (!tempUser.muteAnnouncements) {
-          sendTelegram(chat, updateMessage);
-
+      if (updateMessage) {
+        for (chat of botChats) {
+          var tempUser = await storageManager.getData(chat);
+          console.log("announcement mute check for updated video", chat, tempUser);
+          if (!tempUser.muteAnnouncements) {
+            sendTelegram(chat, updateMessage);
+          }
         }
       }
     }
@@ -578,11 +592,13 @@ async function register({
     handler: async ({ video }) => {
       var updateMessage = await videoAnnounce(video.dataValues, "uploaded");
       console.log("video uploaded announcement", updateMessage);
-      for (chat of botChats) {
-        var tempUser = storageManager.getData(chat);
-        console.log("uploaded mute check", chat, tempUser.username, tempUser.muteAnnouncements)
-        if (!tempUser.muteAnnouncements) {
-          sendTelegram(chat, updateMessage);
+      if (updatemessage) {
+        for (chat of botChats) {
+          var tempUser = storageManager.getData(chat);
+          console.log("uploaded mute check", chat, tempUser.username, tempUser.muteAnnouncements)
+          if (!tempUser.muteAnnouncements) {
+            sendTelegram(chat, updateMessage);
+          }
         }
       }
     }
@@ -709,6 +725,7 @@ async function register({
       user.muteWelcome = await settingsManager.getSetting("telegram-default-welcome");
       console.log("saving new user", user);
       await storageManager.storeData(user.id, user);
+      await sendTelegram(chatID, instance + "/a/" + user.username);
       // if (user.avatar != undefined) {
       // console.log("attempting to download avatar", user.avatar);
       // avatar = await axios.get(user.avatar);
