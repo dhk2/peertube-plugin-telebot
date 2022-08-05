@@ -1,9 +1,11 @@
 # Telebot
 
-a telegram bot plugin for authentication and notification.
+A telegram bot plugin for authentication and notifications. 
 
-alpha test software, currently not incredibly stable or feature complete, run at your own risk.
+Beta test software, run at your own risk. Please share any issues or questions on github.
 
-Live Alpha test available at https://bitcast.online peertube instance
+Test sites
+* [Joker TV](https://the.jokertv.eu)
+* [Bitcast](https://bitcast.online)
+* [Lawsplaining](https://lawsplaining.peertube.biz)
 
-Contributers and suggestions welcome on Github.
