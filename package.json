@@ -1,7 +1,7 @@
 {
   "name": "peertube-plugin-telebot",
   "description": "PeerTube plugin for telegraph bot",
-  "version": "0.8.4",
+  "version": "0.8.6",
   "author": "dhk2",
   "bugs": "https://github.com/dhk2/peertube-plugin-telebot/issues",
   "license": "ISC",

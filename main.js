@@ -6,7 +6,8 @@ const { Telegraf } = require('telegraf')
 const { Keyboard } = require('telegram-keyboard');
 const { channel } = require('diagnostics_channel');
 const { Console } = require('console');
-//const { JobQueue } = require('/var/www/peertube/peertube-latest/dist/server/lib/job-queue/job-queue.js');
+// const { JobQueue } = require('/var/www/peertube/peertube-latest/dist/server/lib/job-queue/job-queue.js');
+const { JobQueue } = require('/home/marc/PeerTube/dist/server/lib/job-queue/job-queue.js');
 var botApiUrl = undefined;
 var announceChannel = undefined;
 var announcePlaylist = undefined;
@@ -152,6 +153,19 @@ async function register({
     }
   } catch { console.log("error getting bearer token") }
   console.log("\n\n\nring bear: ", bearerToken);
+  var adminChannelId =undefined;
+  try{ 
+    const headers = {
+      'Authorization': 'Bearer ' + bearerToken
+    }
+    let adminApi = instance+"/api/v1/users/me"
+    let adminJson = await axios.get(adminApi, { headers });
+    console.log(adminJson);
+    adminChannelId = adminJson.data.videoChannels[0].id;
+    console.log("admin channel",adminChannelId,adminJson.data.videoChannels[0].name);
+  } catch (err) {
+    console.log("error getting admin user info",err);
+  }
   try {
     syncChannels = await storageManager.getData('telegram-sync');
   } catch { console.log("error loading youtube sync list") }
@@ -336,16 +350,20 @@ async function register({
     ctx.reply("sync links cleared");
   })
   bot.command('test', async (ctx) => {
-    let photoUrl = "https://tv.mattchristiansenmedia.com/static/thumbnails/feeaa2c3-f1cb-4437-8be8-df7ab2600e6f.jpg";
-    console.log("photo url", photoUrl);
-    await ctx.replyWithPhoto({ url: photoUrl }, {
-      caption: '<a href="https://tv.mattchristiansenmedia.com/videos/watch/8fdd7676-c7aa-44e4-83ce-75210c913bf8">Remember the Supreme Court Leak? | We Still Don’t Have Answers, Just New Leaks</a>',
-      parse_mode: 'HTML'
-      //reply_markup: pizzaMenu,
-    });
+    console.log("test command");
   })
   bot.command('test2', async (ctx) => {
-    await ctx.reply("[​​​​​​​​​​​](https://upload.wikimedia.org/wikipedia/commons/thumb/0/02/Stack_Overflow_logo.svg/200px-Stack_Overflow_logo.svg.png) Some text here.", { parse_mode: 'Markdown' });
+    console.log("test 2 command");
+    let uuid = "f8a573c5-8147-49c6-a191-f4bc0bbdcb0e";
+    let filepath ="/home/marc/test.mp4";
+    const dataInput = {
+      videoUUID: uuid,
+      filePath: filepath
+    }
+  
+    JobQueue.Instance.init(true)
+    await JobQueue.Instance.createJob({ type: 'video-file-import', payload: dataInput })
+    console.log('Import job for video %s created.', uuid);
   })
   bot.command('mute', async (ctx) => {
     var chatID = ctx.update.message.from.id;
@@ -648,6 +666,26 @@ async function register({
   //                                                Routers
   //
   const router = getRouter();
+  router.use('/reqtrans', async (req,res) => {
+    console.log("Requesting transcoding of video");
+    console.log(req.query.uuid, req.query.instance);
+    let apicall=req.query.instance+"/api/v1/videos/"+req.query.uuid;
+    console.log(apicall);
+    let videoJson = undefined;
+    try {
+      videoJson = await axios.get(apicall);
+    } catch {
+      console.log("error attempting to get video data for requested transcode job");
+      return;
+    }
+      //console.log(videoJson);
+    let fileUrl = videoJson.data.files[0].fileDownloadUrl;
+    console.log(await importVideo(adminChannelId,fileUrl,bearerToken));
+
+  });
+  router.use('/addtrans', async (req,res) => {
+
+  });
   router.use('/callback', async (req, res) => {
     console.log(req.query.id, req.query.first_name, req.query.last_name, req.query.username);
     var chatID = req.query.id;
