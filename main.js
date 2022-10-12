@@ -680,11 +680,19 @@ async function register({
     }
       //console.log(videoJson);
     let fileUrl = videoJson.data.files[0].fileDownloadUrl;
-    console.log(await importVideo(adminChannelId,fileUrl,bearerToken));
-
+    let importResult = await importVideo(adminChannelId,fileUrl,bearerToken);
+    console.log("import result",importResult.data);
+    if (importResult == undefined){
+      console.log("import failed");
+      return;
+    }
+    let targetUuid = importResult.data.video.uuid;
+    let apiCall = req.query.instance+"/plugins/telebot/router/addtrans?uuid="+req.query.uuid+"&targetUuid="+targetUuid+"&instance="+instance;
+    console.log("need to get",instance,targetUrl,apiCall);
+    await axios.get(apiCall);
   });
   router.use('/addtrans', async (req,res) => {
-
+    console.log("request to add transcoded video files ",req.query.uuid, req.query.targetUuid,req.query.instance);
   });
   router.use('/callback', async (req, res) => {
     console.log(req.query.id, req.query.first_name, req.query.last_name, req.query.username);

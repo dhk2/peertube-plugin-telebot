@@ -1,0 +1,246 @@
+{
+    "id": 357181,
+    "uuid": "723a6314-6091-48c5-b0d5-9b0fbbea0701",
+    "shortUUID": "f77sSDC4LyH59Ci7tXsYmZ",
+    "url": "https://tv.mattchristiansenmedia.com/videos/watch/723a6314-6091-48c5-b0d5-9b0fbbea0701",
+    "name": "Breitbart - WAR -- _Language Warning_-1138p-hls",
+    "category": {
+        "id": null,
+        "label": "Misc"
+    },
+    "licence": {
+        "id": null,
+        "label": "Unknown"
+    },
+    "language": {
+        "id": null,
+        "label": "Unknown"
+    },
+    "privacy": {
+        "id": 1,
+        "label": "Public"
+    },
+    "nsfw": false,
+    "description": null,
+    "isLocal": true,
+    "duration": 19,
+    "views": 3,
+    "viewers": 1,
+    "likes": 0,
+    "dislikes": 0,
+    "thumbnailPath": "/static/thumbnails/adcf904b-7ac6-4012-8f81-7ddd7c5a5da9.jpg",
+    "previewPath": "/lazy-static/previews/3f8b6f8b-7727-43ba-af50-5893b99eb1cc.jpg",
+    "embedPath": "/videos/embed/723a6314-6091-48c5-b0d5-9b0fbbea0701",
+    "createdAt": "2022-02-22T20:50:24.396Z",
+    "updatedAt": "2022-07-30T03:03:55.253Z",
+    "publishedAt": "2022-02-22T20:50:49.636Z",
+    "originallyPublishedAt": null,
+    "isLive": false,
+    "account": {
+        "url": "https://tv.mattchristiansenmedia.com/accounts/marc",
+        "name": "marc",
+        "host": "tv.mattchristiansenmedia.com",
+        "avatars": [
+            {
+                "width": 48,
+                "path": "/lazy-static/avatars/c8cb6e96-f3df-4b31-bd1c-b0071a339306.gif",
+                "createdAt": "2022-05-25T08:01:41.098Z",
+                "updatedAt": "2022-05-25T08:01:41.098Z"
+            },
+            {
+                "width": 120,
+                "path": "/lazy-static/avatars/ad81551e-22c7-46b0-ae35-778b577d9f0a.gif",
+                "createdAt": "2021-10-04T03:13:00.351Z",
+                "updatedAt": "2021-10-04T03:13:00.351Z"
+            }
+        ],
+        "avatar": {
+            "width": 48,
+            "path": "/lazy-static/avatars/c8cb6e96-f3df-4b31-bd1c-b0071a339306.gif",
+            "createdAt": "2022-05-25T08:01:41.098Z",
+            "updatedAt": "2022-05-25T08:01:41.098Z"
+        },
+        "id": 27,
+        "hostRedundancyAllowed": false,
+        "followingCount": 33,
+        "followersCount": 0,
+        "createdAt": "2021-05-06T20:56:46.392Z",
+        "banners": [],
+        "displayName": "marc",
+        "description": "Tech admin\nFree speech extremist\nPeerTube evangalist\nNationalist ant-corporate libertarian ",
+        "updatedAt": "2021-05-07T03:37:47.722Z",
+        "userId": 7
+    },
+    "channel": {
+        "url": "https://tv.mattchristiansenmedia.com/video-channels/marc_duquesne",
+        "name": "marc_duquesne",
+        "host": "tv.mattchristiansenmedia.com",
+        "avatars": [
+            {
+                "width": 48,
+                "path": "/lazy-static/avatars/b2863ae8-773e-4d03-b8b2-392e651d9bd1.gif",
+                "createdAt": "2022-05-25T08:01:41.366Z",
+                "updatedAt": "2022-05-25T08:01:41.366Z"
+            },
+            {
+                "width": 120,
+                "path": "/lazy-static/avatars/b281c95a-ab90-4971-a3e2-de96a861baac.gif",
+                "createdAt": "2021-10-04T02:49:49.817Z",
+                "updatedAt": "2021-10-04T02:49:49.817Z"
+            }
+        ],
+        "avatar": {
+            "width": 48,
+            "path": "/lazy-static/avatars/b2863ae8-773e-4d03-b8b2-392e651d9bd1.gif",
+            "createdAt": "2022-05-25T08:01:41.366Z",
+            "updatedAt": "2022-05-25T08:01:41.366Z"
+        },
+        "id": 19,
+        "hostRedundancyAllowed": false,
+        "followingCount": 0,
+        "followersCount": 0,
+        "createdAt": "2021-05-06T20:56:46.413Z",
+        "banners": [],
+        "displayName": "marc_duquesne",
+        "description": "more testing",
+        "support": null,
+        "isLocal": true,
+        "updatedAt": "2022-05-25T10:37:02.227Z",
+        "ownerAccount": {
+            "url": "https://tv.mattchristiansenmedia.com/accounts/marc",
+            "name": "marc",
+            "host": "tv.mattchristiansenmedia.com",
+            "avatars": [
+                {
+                    "width": 48,
+                    "path": "/lazy-static/avatars/c8cb6e96-f3df-4b31-bd1c-b0071a339306.gif",
+                    "createdAt": "2022-05-25T08:01:41.098Z",
+                    "updatedAt": "2022-05-25T08:01:41.098Z"
+                },
+                {
+                    "width": 120,
+                    "path": "/lazy-static/avatars/ad81551e-22c7-46b0-ae35-778b577d9f0a.gif",
+                    "createdAt": "2021-10-04T03:13:00.351Z",
+                    "updatedAt": "2021-10-04T03:13:00.351Z"
+                }
+            ],
+            "avatar": {
+                "width": 48,
+                "path": "/lazy-static/avatars/c8cb6e96-f3df-4b31-bd1c-b0071a339306.gif",
+                "createdAt": "2022-05-25T08:01:41.098Z",
+                "updatedAt": "2022-05-25T08:01:41.098Z"
+            },
+            "id": 27,
+            "hostRedundancyAllowed": false,
+            "followingCount": 33,
+            "followersCount": 0,
+            "createdAt": "2021-05-06T20:56:46.392Z",
+            "banners": [],
+            "displayName": "marc",
+            "description": "Tech admin\nFree speech extremist\nPeerTube evangalist\nNationalist ant-corporate libertarian ",
+            "updatedAt": "2021-05-07T03:37:47.722Z",
+            "userId": 7
+        }
+    },
+    "pluginData": {
+        "player-annotations": "2-->6\r\noptions: align=top-left\r\n$2 <b>smegma bukkake</b> <br><i> this tests out all the way to the end and back dick, especially the back dick for the monkey pz</i>\r\n\r\n3-->5\r\noptions: align=top\r\n$2 n word f word <blink>what what</blink>\r\n\r\n6-->16\r\noptions: align=top-right\r\n$10 jack mehoff\r\n\r\n1-->5\r\noptions: align=bottom-left\r\n$5 Ben Shapiro's sister\r\n\r\n4-->15\r\noptions: align=bottom\r\n$20 glowie mcfed\r\n\r\n6-->\r\noptions: align=bottom-right\r\n$100 <h1>uncle a</h1><i> here's to a bright future ahead for all the judeochristians.</i>\r\n\r\n12-->16\r\noptions: align=top-left\r\n$4 <b>Smegma bukkake</b><i>Too dream the impossible dreadm</i>\r\n\r\n"
+    },
+    "blacklisted": false,
+    "blacklistedReason": null,
+    "streamingPlaylists": [
+        {
+            "id": 3175545,
+            "type": 1,
+            "playlistUrl": "https://peertube-videos.cdn.peertube.biz/streaming-playlistshls/723a6314-6091-48c5-b0d5-9b0fbbea0701/380933a9-3d82-41ef-83f2-9c7c85cdc5a8-master.m3u8",
+            "segmentsSha256Url": "https://peertube-videos.cdn.peertube.biz/streaming-playlistshls/723a6314-6091-48c5-b0d5-9b0fbbea0701/d6be0e64-a28d-4b65-8397-e2a38a7bd497-segments-sha256.json",
+            "redundancies": [],
+            "files": [
+                {
+                    "resolution": {
+                        "id": 1138,
+                        "label": "1138p"
+                    },
+                    "magnetUri": "magnet:?xs=https%3A%2F%2Ftv.mattchristiansenmedia.com%2Flazy-static%2Ftorrents%2F52e85bbb-f27e-40ef-b0f5-9a36b8e1ec66-1138-hls.torrent&xt=urn:btih:400e299675978fea01c4aacd39f828c91a044978&dn=Breitbart+-+WAR+--+_Language+Warning_-1138p-hls&tr=https%3A%2F%2Ftv.mattchristiansenmedia.com%2Ftracker%2Fannounce&tr=wss%3A%2F%2Ftv.mattchristiansenmedia.com%3A443%2Ftracker%2Fsocket&ws=https%3A%2F%2Fpeertube-videos.cdn.peertube.biz%2Fstreaming-playlistshls%2F723a6314-6091-48c5-b0d5-9b0fbbea0701%2F4b1cd7ea-6f0e-4c71-a443-d64d8f8d6b57-1138-fragmented.mp4",
+                    "size": 1802338,
+                    "fps": 29,
+                    "torrentUrl": "https://tv.mattchristiansenmedia.com/lazy-static/torrents/52e85bbb-f27e-40ef-b0f5-9a36b8e1ec66-1138-hls.torrent",
+                    "torrentDownloadUrl": "https://tv.mattchristiansenmedia.com/download/torrents/52e85bbb-f27e-40ef-b0f5-9a36b8e1ec66-1138-hls.torrent",
+                    "fileUrl": "https://peertube-videos.cdn.peertube.biz/streaming-playlistshls/723a6314-6091-48c5-b0d5-9b0fbbea0701/4b1cd7ea-6f0e-4c71-a443-d64d8f8d6b57-1138-fragmented.mp4",
+                    "fileDownloadUrl": "https://tv.mattchristiansenmedia.com/download/streaming-playlists/hls/videos/723a6314-6091-48c5-b0d5-9b0fbbea0701-1138-fragmented.mp4",
+                    "metadataUrl": "https://tv.mattchristiansenmedia.com/api/v1/videos/723a6314-6091-48c5-b0d5-9b0fbbea0701/metadata/1184792"
+                },
+                {
+                    "resolution": {
+                        "id": 1080,
+                        "label": "1080p"
+                    },
+                    "magnetUri": "magnet:?xs=https%3A%2F%2Ftv.mattchristiansenmedia.com%2Flazy-static%2Ftorrents%2Fab39bb08-638b-49b8-ae02-61b7b2367e83-1080-hls.torrent&xt=urn:btih:ea08cda7a81e8f467fb1471e9613184861a08d2f&dn=Breitbart+-+WAR+--+_Language+Warning_-1138p-hls&tr=https%3A%2F%2Ftv.mattchristiansenmedia.com%2Ftracker%2Fannounce&tr=wss%3A%2F%2Ftv.mattchristiansenmedia.com%3A443%2Ftracker%2Fsocket&ws=https%3A%2F%2Fpeertube-videos.cdn.peertube.biz%2Fstreaming-playlistshls%2F723a6314-6091-48c5-b0d5-9b0fbbea0701%2F948dc8b9-81d8-4d4a-aa58-733db6e6bd74-1080-fragmented.mp4",
+                    "size": 1691754,
+                    "fps": 29,
+                    "torrentUrl": "https://tv.mattchristiansenmedia.com/lazy-static/torrents/ab39bb08-638b-49b8-ae02-61b7b2367e83-1080-hls.torrent",
+                    "torrentDownloadUrl": "https://tv.mattchristiansenmedia.com/download/torrents/ab39bb08-638b-49b8-ae02-61b7b2367e83-1080-hls.torrent",
+                    "fileUrl": "https://peertube-videos.cdn.peertube.biz/streaming-playlistshls/723a6314-6091-48c5-b0d5-9b0fbbea0701/948dc8b9-81d8-4d4a-aa58-733db6e6bd74-1080-fragmented.mp4",
+                    "fileDownloadUrl": "https://tv.mattchristiansenmedia.com/download/streaming-playlists/hls/videos/723a6314-6091-48c5-b0d5-9b0fbbea0701-1080-fragmented.mp4",
+                    "metadataUrl": "https://tv.mattchristiansenmedia.com/api/v1/videos/723a6314-6091-48c5-b0d5-9b0fbbea0701/metadata/1184796"
+                },
+                {
+                    "resolution": {
+                        "id": 480,
+                        "label": "480p"
+                    },
+                    "magnetUri": "magnet:?xs=https%3A%2F%2Ftv.mattchristiansenmedia.com%2Flazy-static%2Ftorrents%2Fa63f1a90-e423-47b3-91b7-d5ede5c3ead9-480-hls.torrent&xt=urn:btih:9e188f29eecc6fea2a8cf9070538aa7572322a15&dn=Breitbart+-+WAR+--+_Language+Warning_-1138p-hls&tr=https%3A%2F%2Ftv.mattchristiansenmedia.com%2Ftracker%2Fannounce&tr=wss%3A%2F%2Ftv.mattchristiansenmedia.com%3A443%2Ftracker%2Fsocket&ws=https%3A%2F%2Fpeertube-videos.cdn.peertube.biz%2Fstreaming-playlistshls%2F723a6314-6091-48c5-b0d5-9b0fbbea0701%2F1529e3f0-45ed-4255-a3f9-f4cfa4a0c7b2-480-fragmented.mp4",
+                    "size": 717407,
+                    "fps": 29,
+                    "torrentUrl": "https://tv.mattchristiansenmedia.com/lazy-static/torrents/a63f1a90-e423-47b3-91b7-d5ede5c3ead9-480-hls.torrent",
+                    "torrentDownloadUrl": "https://tv.mattchristiansenmedia.com/download/torrents/a63f1a90-e423-47b3-91b7-d5ede5c3ead9-480-hls.torrent",
+                    "fileUrl": "https://peertube-videos.cdn.peertube.biz/streaming-playlistshls/723a6314-6091-48c5-b0d5-9b0fbbea0701/1529e3f0-45ed-4255-a3f9-f4cfa4a0c7b2-480-fragmented.mp4",
+                    "fileDownloadUrl": "https://tv.mattchristiansenmedia.com/download/streaming-playlists/hls/videos/723a6314-6091-48c5-b0d5-9b0fbbea0701-480-fragmented.mp4",
+                    "metadataUrl": "https://tv.mattchristiansenmedia.com/api/v1/videos/723a6314-6091-48c5-b0d5-9b0fbbea0701/metadata/1184795"
+                },
+                {
+                    "resolution": {
+                        "id": 144,
+                        "label": "144p"
+                    },
+                    "magnetUri": "magnet:?xs=https%3A%2F%2Ftv.mattchristiansenmedia.com%2Flazy-static%2Ftorrents%2F9a26ad6d-73b4-4d62-8e59-bfd721fb4eab-144-hls.torrent&xt=urn:btih:a12b3702f03a464c1c58dddd50f5cf468ab1b968&dn=Breitbart+-+WAR+--+_Language+Warning_-1138p-hls&tr=https%3A%2F%2Ftv.mattchristiansenmedia.com%2Ftracker%2Fannounce&tr=wss%3A%2F%2Ftv.mattchristiansenmedia.com%3A443%2Ftracker%2Fsocket&ws=https%3A%2F%2Fpeertube-videos.cdn.peertube.biz%2Fstreaming-playlistshls%2F723a6314-6091-48c5-b0d5-9b0fbbea0701%2F0d5ec749-128e-4e0a-8a4d-21e33afc5e3f-144-fragmented.mp4",
+                    "size": 393716,
+                    "fps": 29,
+                    "torrentUrl": "https://tv.mattchristiansenmedia.com/lazy-static/torrents/9a26ad6d-73b4-4d62-8e59-bfd721fb4eab-144-hls.torrent",
+                    "torrentDownloadUrl": "https://tv.mattchristiansenmedia.com/download/torrents/9a26ad6d-73b4-4d62-8e59-bfd721fb4eab-144-hls.torrent",
+                    "fileUrl": "https://peertube-videos.cdn.peertube.biz/streaming-playlistshls/723a6314-6091-48c5-b0d5-9b0fbbea0701/0d5ec749-128e-4e0a-8a4d-21e33afc5e3f-144-fragmented.mp4",
+                    "fileDownloadUrl": "https://tv.mattchristiansenmedia.com/download/streaming-playlists/hls/videos/723a6314-6091-48c5-b0d5-9b0fbbea0701-144-fragmented.mp4",
+                    "metadataUrl": "https://tv.mattchristiansenmedia.com/api/v1/videos/723a6314-6091-48c5-b0d5-9b0fbbea0701/metadata/1184794"
+                },
+                {
+                    "resolution": {
+                        "id": 0,
+                        "label": "Audio"
+                    },
+                    "magnetUri": "magnet:?xs=https%3A%2F%2Ftv.mattchristiansenmedia.com%2Flazy-static%2Ftorrents%2F1f51557e-aa71-4930-a92f-4119068b8866-0-hls.torrent&xt=urn:btih:5ae4a8dc220ba9ba72dcabbe6e18f028e8b1340f&dn=Breitbart+-+WAR+--+_Language+Warning_-1138p-hls&tr=https%3A%2F%2Ftv.mattchristiansenmedia.com%2Ftracker%2Fannounce&tr=wss%3A%2F%2Ftv.mattchristiansenmedia.com%3A443%2Ftracker%2Fsocket&ws=https%3A%2F%2Fpeertube-videos.cdn.peertube.biz%2Fstreaming-playlistshls%2F723a6314-6091-48c5-b0d5-9b0fbbea0701%2F0950dcd5-9df5-48a6-b11a-7f3af10a9250-0-fragmented.mp4",
+                    "size": 301730,
+                    "fps": 0,
+                    "torrentUrl": "https://tv.mattchristiansenmedia.com/lazy-static/torrents/1f51557e-aa71-4930-a92f-4119068b8866-0-hls.torrent",
+                    "torrentDownloadUrl": "https://tv.mattchristiansenmedia.com/download/torrents/1f51557e-aa71-4930-a92f-4119068b8866-0-hls.torrent",
+                    "fileUrl": "https://peertube-videos.cdn.peertube.biz/streaming-playlistshls/723a6314-6091-48c5-b0d5-9b0fbbea0701/0950dcd5-9df5-48a6-b11a-7f3af10a9250-0-fragmented.mp4",
+                    "fileDownloadUrl": "https://tv.mattchristiansenmedia.com/download/streaming-playlists/hls/videos/723a6314-6091-48c5-b0d5-9b0fbbea0701-0-fragmented.mp4",
+                    "metadataUrl": "https://tv.mattchristiansenmedia.com/api/v1/videos/723a6314-6091-48c5-b0d5-9b0fbbea0701/metadata/1184793"
+                }
+            ]
+        }
+    ],
+    "files": [],
+    "support": null,
+    "descriptionPath": "/api/v1/videos/723a6314-6091-48c5-b0d5-9b0fbbea0701/description",
+    "tags": [],
+    "commentsEnabled": true,
+    "downloadEnabled": true,
+    "waitTranscoding": true,
+    "state": {
+        "id": 1,
+        "label": "Published"
+    },
+    "trackerUrls": [
+        "https://tv.mattchristiansenmedia.com/tracker/announce",
+        "wss://tv.mattchristiansenmedia.com:443/tracker/socket"
+    ]
+}
